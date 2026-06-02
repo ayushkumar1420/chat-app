@@ -2,7 +2,7 @@
 const SettingPage = () => {
   return (
     <div>
-      Settingpage
+      Setting page
     </div>
   )
 }
