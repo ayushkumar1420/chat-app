@@ -59,8 +59,8 @@ const SignUpPage = () => {
                 <span className="label-text font-medium">Full Name</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 flex w-10 items-center justify-center pointer-events-none">
-                  <User className="h-5 w-5 text-base-content/40" />
+                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 flex w-10 items-center justify-center">
+                  <User className="h-5 w-5 text-base-content/60" />
                 </div>
                 <input
                   type="text"
@@ -77,8 +77,8 @@ const SignUpPage = () => {
                 <span className="label-text font-medium">Email</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 flex w-10 items-center justify-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-base-content/40" />
+                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 flex w-10 items-center justify-center">
+                  <Mail className="h-5 w-5 text-base-content/60" />
                 </div>
                 <input
                   type="email"
@@ -95,8 +95,8 @@ const SignUpPage = () => {
                 <span className="label-text font-medium">Password</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 flex w-10 items-center justify-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-base-content/40" />
+                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 flex w-10 items-center justify-center">
+                  <Lock className="h-5 w-5 text-base-content/60" />
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
