@@ -2,8 +2,13 @@ import { create  } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast"
 
-const getErrorMessage = (error) =>
-    error?.response?.data?.message || error?.message || "Something went wrong";
+const getErrorMessage = (error) => {
+    if (error?.message === "Network Error") {
+        return "Unable to connect to the server. Make sure the backend is running and try again.";
+    }
+
+    return error?.response?.data?.message || error?.message || "Something went wrong";
+};
 
 export const useAuthStore = create((set) => ({
     authUser: null,
