@@ -13,7 +13,7 @@ const getErrorMessage = (error) => {
 export const useAuthStore = create((set) => ({
     authUser: null,
     isSigningUp: false,
-    isLoggingIng: false,
+    isLoggingIn: false,
     isUpdatingProfile: false,
 
     isCheckingAuth: true,
