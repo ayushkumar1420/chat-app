@@ -1,4 +1,6 @@
 @import "tailwindcss";
-@plugin "daisyui";
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark, cupcake, retro;
+}
 
 /* You can add global custom styles below */
