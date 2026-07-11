@@ -7,16 +7,26 @@ import { Users } from "lucide-react";
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
 
-  const { onlineUsers } = useAuthStore();
+  const { onlineUsers, authUser } = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
   useEffect(() => {
     getUsers();
   }, [getUsers]);
 
+  // The API excludes the current user; this extra check keeps the sidebar safe
+  // if a cached or malformed response ever includes them.
+  const contacts = Array.from(
+    new Map(
+      users
+        .filter((user) => user?._id && user._id !== authUser?._id)
+        .map((user) => [user._id, user])
+    ).values()
+  );
   const filteredUsers = showOnlineOnly
-    ? users.filter((user) => onlineUsers.includes(user._id))
-    : users;
+    ? contacts.filter((user) => onlineUsers.includes(user._id))
+    : contacts;
+  const onlineContactCount = contacts.filter((user) => onlineUsers.includes(user._id)).length;
 
   if (isUsersLoading) return <SidebarSkeleton />;
 
@@ -27,7 +37,6 @@ const Sidebar = () => {
           <Users className="size-6" />
           <span className="font-medium hidden lg:block">Contacts</span>
         </div>
-        {/* TODO: Online filter toggle */}
         <div className="mt-3 hidden lg:flex items-center gap-2">
           <label className="cursor-pointer flex items-center gap-2">
             <input
@@ -38,7 +47,7 @@ const Sidebar = () => {
             />
             <span className="text-sm">Show online only</span>
           </label>
-          <span className="text-xs text-zinc-500">({onlineUsers.length - 1} online)</span>
+          <span className="text-xs text-zinc-500">({onlineContactCount} online)</span>
         </div>
       </div>
 
@@ -56,7 +65,7 @@ const Sidebar = () => {
             <div className="relative mx-auto lg:mx-0">
               <img
                 src={user.profilePic || "/avatar.png"}
-                alt={user.name}
+                alt={user.fullName}
                 className="size-12 object-cover rounded-full"
               />
               {onlineUsers.includes(user._id) && (
@@ -78,7 +87,9 @@ const Sidebar = () => {
         ))}
 
         {filteredUsers.length === 0 && (
-          <div className="text-center text-zinc-500 py-4">No online users</div>
+          <div className="text-center text-zinc-500 py-4">
+            {showOnlineOnly ? "No online users" : "No contacts yet"}
+          </div>
         )}
       </div>
     </aside>

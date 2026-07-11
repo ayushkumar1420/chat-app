@@ -7,7 +7,12 @@ import cloudinary from "../lib/cloudinary.js"
 export const getUsersForSidebar = async(req,res) => {
     try {
         const loggedInUserId = req.user._id;
-        const filteredUsers = await User.find({ _id: { $ne: loggedInUserId } }).select("-password");
+        // Contacts come exclusively from registered users. The authenticated user
+        // belongs in the profile area, not in their own contact list.
+        const filteredUsers = await User.find({ _id: { $ne: loggedInUserId } })
+          .select("fullName profilePic")
+          .sort({ fullName: 1, _id: 1 })
+          .lean();
 
         res.status(200).json(filteredUsers);
     } catch (error) {

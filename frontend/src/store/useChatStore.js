@@ -14,9 +14,18 @@ export const useChatStore = create((set, get) => ({
     set({ isUsersLoading: true });
     try {
       const res = await axiosInstance.get("/messages/users");
-      set({ users: res.data });
+      const currentUserId = useAuthStore.getState().authUser?._id;
+      const uniqueContacts = Array.from(
+        new Map(
+          res.data
+            .filter((user) => user?._id && user._id !== currentUserId)
+            .map((user) => [user._id, user])
+        ).values()
+      );
+
+      set({ users: uniqueContacts });
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Unable to load contacts");
     } finally {
       set({ isUsersLoading: false });
     }
