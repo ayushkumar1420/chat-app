@@ -6,6 +6,7 @@ import messageRoutes from "./src/routes/message.route.js"
 import { connectDB } from "./src/lib/db.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import path from "path";
 
 dotenv.config()
 import { app, server } from "./src/lib/socket.js";
@@ -30,6 +31,16 @@ app.use(cors({
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes)
+
+const __dirname = path.resolve();
+
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "../frontend/dist")));
+    
+    app.use((req, res) => {
+        res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+    });
+}
 
 connectDB()
     .then(() => {
