@@ -12,18 +12,26 @@ dotenv.config()
 import { app, server } from "./src/lib/socket.js";
 
 const PORT = process.env.PORT || 5001;
+
 const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173,http://127.0.0.1:5173")
     .split(",")
     .map((origin) => origin.trim());
 
+console.log("Allowed origins:", allowedOrigins);
+
 app.use(express.json());
 app.use(cookieParser());
+
+
 app.use(cors({
     origin: (origin, callback) => {
+        console.log("Request origin:", origin);
+
         if (!origin || allowedOrigins.includes(origin)) {
             return callback(null, true);
         }
 
+        console.log("Blocked origin:", origin);
         return callback(new Error("Not allowed by CORS"));
     },
     credentials: true
