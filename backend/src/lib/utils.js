@@ -18,5 +18,11 @@ export const generateToken = (userId, res) => {
     sameSite: isProduction ? "none" : "lax",
   });
 
+  console.log("JWT cookie configured:", {
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    nodeEnv: process.env.NODE_ENV,
+  });
+
   return token;
 };

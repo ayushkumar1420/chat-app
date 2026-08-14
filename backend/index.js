@@ -1,6 +1,5 @@
-// const express = require('express');
+import "dotenv/config";
 import express from "express";
-import dotenv from "dotenv";
 import authRoutes from "./src/routes/auth.route.js";
 import messageRoutes from "./src/routes/message.route.js"
 import { connectDB } from "./src/lib/db.js";
@@ -10,10 +9,10 @@ import path from "path";
 
 import { app, server } from "./src/lib/socket.js";
 
-dotenv.config()
-
 
 const PORT = process.env.PORT || 5001;
+
+app.set("trust proxy", 1); // Trust Render's reverse proxy for secure cookies
 
 app.use(express.json());
 app.use(cookieParser());
@@ -22,17 +21,12 @@ const allowedOrigins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "https://chat-app-kappa-seven-42.vercel.app",
-];
+    process.env.CLIENT_URL,
+].filter(Boolean);
 
 app.use(
     cors({
-        origin: (origin, callback) => {
-            if (!origin || allowedOrigins.includes(origin)) {
-                callback(null, true);
-            } else {
-                callback(new Error("Not allowed by CORS"));
-            }
-        },
+        origin: allowedOrigins,
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     })
