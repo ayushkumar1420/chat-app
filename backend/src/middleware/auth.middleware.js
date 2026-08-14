@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken"
 import User from "../models/user.model.js"
-import { login } from "../controllers/auth.controller.js";
+// import { login } from "../controllers/auth.controller.js";
 
 export const protectRoute = async (req, res, next) => {
     try {
