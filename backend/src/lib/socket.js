@@ -7,7 +7,11 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: process.env.NODE_ENV === "production" ? process.env.CLIENT_URL : ["http://localhost:5173", "http://127.0.0.1:5173", "https://chat-app-kappa-seven-42.vercel.app"],
+    origin: [
+      "http://localhost:5173",
+      "http://127.0.0.1:5173",
+      "https://chat-app-kappa-seven-42.vercel.app",
+    ],
     methods: ["GET", "POST"],
     credentials: true,
   },
