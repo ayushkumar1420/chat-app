@@ -14,6 +14,10 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors(corsOptions));
 
+app.get("/health", (_req, res) => {
+    res.status(200).json({ status: "ok" });
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 

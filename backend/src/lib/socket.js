@@ -3,14 +3,16 @@ import { Server } from "socket.io";
 import http from "http";
 import express from "express";
 import jwt from "jsonwebtoken";
-import { allowedOrigins } from "../config/cors.js";
+import { isAllowedOrigin } from "../config/cors.js";
 
 const app = express();
 const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: allowedOrigins,
+        origin(origin, callback) {
+            callback(null, isAllowedOrigin(origin));
+        },
         methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
         credentials: true,
         allowedHeaders: ["Content-Type", "Authorization"],
