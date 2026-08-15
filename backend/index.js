@@ -1,40 +1,50 @@
-import "dotenv/config";
 import express from "express";
+import dotenv from "dotenv";
 import authRoutes from "./src/routes/auth.route.js";
-import messageRoutes from "./src/routes/message.route.js"
+import messageRoutes from "./src/routes/message.route.js";
 import { connectDB } from "./src/lib/db.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import path from "path";
+
+dotenv.config();
 
 import { app, server } from "./src/lib/socket.js";
 
-
 const PORT = process.env.PORT || 5001;
-
-app.set("trust proxy", 1); // Trust Render's reverse proxy for secure cookies
-
-app.use(express.json());
-app.use(cookieParser());
 
 const allowedOrigins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "https://chat-app-kappa-seven-42.vercel.app",
-    process.env.CLIENT_URL,
-].filter(Boolean);
+];
+
+app.use(express.json());
+app.use(cookieParser());
 
 app.use(
     cors({
-        origin: allowedOrigins,
+        origin: (origin, callback) => {
+            // Allow requests with no origin
+            // e.g. Postman/server-to-server
+            if (!origin) {
+                return callback(null, true);
+            }
+
+            if (allowedOrigins.includes(origin)) {
+                return callback(null, true);
+            }
+
+            console.log("Blocked CORS origin:", origin);
+            return callback(new Error("Not allowed by CORS"));
+        },
         credentials: true,
-        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
     })
 );
 
 app.use("/api/auth", authRoutes);
-app.use("/api/messages", messageRoutes)
-
+app.use("/api/messages", messageRoutes);
 
 connectDB()
     .then(() => {
