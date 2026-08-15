@@ -28,8 +28,8 @@ export const signup = async (req, res) => {
 
         if (newUser) {
             //generate jwt token here
-            const token = generateToken(newUser._id, res)
             await newUser.save();
+            generateToken(newUser._id, res);
 
             res.status(201).json({
                 _id: newUser._id,
@@ -61,7 +61,7 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "Invalid credentials" })
         }
 
-        const token = generateToken(user._id, res)
+        generateToken(user._id, res);
 
         res.status(200).json({
             _id: user._id,
@@ -81,7 +81,8 @@ export const logout = (req, res) => {
             maxAge: 0, 
             httpOnly: true, 
             sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", 
-            secure: process.env.NODE_ENV === "production" 
+            secure: process.env.NODE_ENV === "production",
+            path: "/",
         });
         res.status(200).json({ message: "Logout successfull" });
     } catch (error) {

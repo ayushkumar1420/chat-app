@@ -3,7 +3,7 @@ import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
-const SOCKET_URL = import.meta.env.VITE_API_URL.replace("/api", "");
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 
 
 export const useAuthStore = create((set, get) => ({
@@ -92,6 +92,7 @@ export const useAuthStore = create((set, get) => ({
       query: {
         userId: authUser._id,
       },
+      autoConnect: false,
     });
     socket.connect();
 
